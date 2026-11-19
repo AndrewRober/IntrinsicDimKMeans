@@ -1,0 +1,48 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}
+
+\title{\textbf{Overcoming High-Dimensional Collapse and Voronoi Overfitting in K-Means:\\
+Spectral Intrinsic-Dimension Minimum Description Length (\texttt{SID-KMeans})}}
+\author{Andrew Rober\\
+\small \texttt{andrew\_rober@hotmail.com} \quad \url{https://github.com/AndrewRober/IntrinsicDimKMeans}}
+\date{November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Automatic determination of the cluster count $K^*$ in $K$-Means remains brittle in modern machine learning: raw Within-Cluster Sum of Squares ($\mathrm{WCSS}$) decreases monotonically with $K$, classical cluster-validity indices (Silhouette, Cali\'nski--Harabasz, Davies--Bouldin) cannot evaluate $K=1$ and collapse onto $K=2$ under hierarchical high-dimensional spectra, and Bayesian Information Criterion extensions such as X-Means suffer a dual pathology in $\mathbb{R}^d$. Building upon and rigorously reformulating our prior exploratory work~\cite{rober2023kmeans}, we establish three theoretical results and introduce \textbf{Spectral Intrinsic-Dimension Minimum Description Length (\texttt{SID-KMeans})}, a hyperparameter-free ($\lambda$-free), scale- and rotation-invariant selector:
+(1) \emph{Voronoi Truncation Bias vs.\ Marginal Mixture Consistency (Theorem 1):} Hard $K$-Means partitioning reduces $\mathrm{WCSS}$ on a unimodal Gaussian $\mathcal{N}(\mathbf{0}, \sigma^2\mathbf{I}_m)$ by $\mathbb{E}[\mathrm{WCSS}(2)/\mathrm{WCSS}(1)] = 1 - \frac{2}{\pi m}$, causing naive $\mathrm{WCSS}$-BIC to diverge at rate $-\frac{2}{\pi}N$ and overfit unconditionally; restoring exact marginal \texttt{LogSumExp} mixture likelihood eliminates Voronoi overfitting without under-splitting touching clusters.
+(2) \emph{High-Dimensional Duality Theorem (Theorem 2):} When $K^*$ clusters lie in an $m$-dimensional subspace ($m \ll d$), isotropic ambient noise $\sigma_\perp^2 > 0$ caps ambient log-distortion gains at $N\Delta^2/\sigma_\perp^2$ while BIC penalties scale as $\Theta(Kd\ln N)$, forcing collapse to $\hat{K}=1$ above $d_{\mathrm{crit}} = \frac{N\Delta^2}{(K^*-1)\sigma_\perp^2\ln N}$; conversely, on smooth low-intrinsic-rank neural manifolds ($\sigma_\perp^2 \approx 0$, $d_{\mathrm{PR}} \ll d$), ambient likelihoods inflate degrees of freedom by $d / d_{\mathrm{PR}}$, causing severe over-splitting.
+(3) \emph{Marchenko--Pastur + Satterthwaite Calibration (Theorem 3):} Combining Gavish--Donoho singular-value bulk thresholding with Satterthwaite--Welch quadratic-form degrees of freedom $\nu = (\operatorname{Tr}\hat{\bm{\Sigma}})^2 / \operatorname{Tr}(\hat{\bm{\Sigma}}^2)$ restores exact $\chi_\nu^2$ distance calibration. Validated on an NVIDIA GB10 Grace Blackwell Superchip across 60 real \texttt{BGE-Base} (768D) and \texttt{BGE-Large} (1024D) Transformer document corpora, UCI/vision benchmarks up to 4096D, and null-overfitting suites, \texttt{SID-KMeans} achieves the lowest cluster-count error while running over $25\times$ faster than the Gap Statistic.
+\end{abstract}
+
+\section{Theorems}
+\begin{theorem}[Voronoi Hard-Assignment Bias]
+For $\mathbf{x}_1,\dots,\mathbf{x}_N \stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{N}(\mathbf{0}, \sigma^2\mathbf{I}_m)$, optimal $K=2$ hyperplane $K$-Means yields $\lim_{N\to\infty}\frac{\mathrm{WCSS}(2)}{\mathrm{WCSS}(1)} = 1 - \frac{2}{\pi m}$, so $-Nm\ln\frac{\mathrm{WCSS}(1)}{\mathrm{WCSS}(2)} \le -\frac{2}{\pi}N = -\Theta(N)$. Restoring complete assignment entropy $+2NH(\hat{\bm{\pi}})$ or marginal mixture \texttt{LogSumExp} likelihood restores unimodal consistency ($\Delta > +0.374N > 0$).
+\end{theorem}
+
+\begin{theorem}[Dual High-Dimensional Failure Modes of Ambient BIC]
+Under $m$-dimensional signal separation $\mathrm{BCSS}(K^*)=N\Delta^2$ with $(d-m)$ orthogonal variance $\sigma_\perp^2 > 0$, $\lim_{d\to\infty} Nd\ln\frac{\mathrm{WCSS}(1)}{\mathrm{WCSS}(K^*)} = \frac{N\Delta^2}{\sigma_\perp^2}$, so ambient BIC collapses to $\hat{K}=1$ for $d > d_{\mathrm{crit}} = \frac{N\Delta^2}{(K^*-1)\sigma_\perp^2\ln N}$. Conversely, when $\operatorname{rank}_{\mathrm{eff}}(\bm{\Sigma}) = \nu \ll d$ with $\sigma_\perp^2 = 0$, ambient isotropic variance $\hat{\sigma}_K^2 = \frac{\mathrm{WCSS}(K)}{Nd}$ inflates log-likelihood differences by factor $d/\nu \gg 1$.
+\end{theorem}
+
+\begin{theorem}[Satterthwaite--Marchenko--Pastur Calibration]
+For $\bm{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \bm{\Sigma})$ with spectrum $\lambda_1 \ge \dots \ge \lambda_d \ge 0$, $\|\bm{\varepsilon}\|_2^2$ matches moments $\mathbb{E}[\|\bm{\varepsilon}\|_2^2] = c\nu$ and $\operatorname{Var}(\|\bm{\varepsilon}\|_2^2) = 2c^2\nu$ if and only if $\nu = \frac{(\sum_j \lambda_j)^2}{\sum_j \lambda_j^2}$ and $c = \frac{\sum_j \lambda_j}{\nu}$.
+\end{theorem}
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

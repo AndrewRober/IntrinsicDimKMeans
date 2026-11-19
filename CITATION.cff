@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use SID-KMeans, the mathematical proofs, or benchmark suite, please cite it as below."
+authors:
+  - family-names: "Rober"
+    given-names: "Andrew"
+title: "Overcoming High-Dimensional Collapse and Voronoi Overfitting in K-Means: Spectral Intrinsic-Dimension Minimum Description Length (SID-KMeans)"
+version: 1.0.0
+date-released: 2026-11-19
+url: "https://github.com/AndrewRober/IntrinsicDimKMeans"
+repository-code: "https://github.com/AndrewRober/IntrinsicDimKMeans"
+license: MIT
+keywords:
+  - k-means clustering
+  - model selection
+  - intrinsic dimension
+  - random matrix theory
+  - minimum description length
+  - transformer embeddings
+  - bayesian information criterion
