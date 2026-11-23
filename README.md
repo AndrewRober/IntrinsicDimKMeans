@@ -2,13 +2,13 @@
 
 **Spectral Intrinsic-Dimension Minimum Description Length for Automatic Cluster Selection in $\mathbb{R}^d$**
 
-[![Paper PDF](https://img.shields.io/badge/Paper-PDF%20(Typeset)-b31b1b?style=for-the-badge)](paper/SID_KMeans_Paper.pdf)
+[![Paper PDF](https://img.shields.io/badge/Paper-PDF%20%28Typeset%29-b31b1b?style=for-the-badge)](paper/SID_KMeans_Paper.pdf)
 [![Python 3.10+](https://img.shields.io/badge/Python-Scikit%20%7C%20Transformers%20GB10-2563eb?style=for-the-badge)](python/)
 [![C# .NET](https://img.shields.io/badge/C%23-.NET%20Simulator%20%26%20SIDKMeans-059669?style=for-the-badge)](csharp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)](LICENSE)
 
 > **Full Typeset Research Paper:** [**`paper/SID_KMeans_Paper.pdf`**](paper/SID_KMeans_Paper.pdf) *(LaTeX source in [`paper/main.tex`](paper/main.tex), Typst source in [`paper/main.typ`](paper/main.typ))*  
-> **Predecessor Exploratory Study:** Audits, fixes, and generalizes [`AndrewRober/KMeansResearch`](https://github.com/AndrewRober/KMeansResearch) from heuristic 2D penalization to parameter-free spectral information theory validated on **768D–1024D Transformer embeddings (`NVIDIA GB10`)**.
+> **Predecessor Exploratory Study:** Audits, fixes, and generalizes `KMeansResearch` (2023) from heuristic 2D penalization to parameter-free spectral information theory validated on **768D–1024D Transformer embeddings (`NVIDIA GB10`)**.
 
 ---
 
@@ -16,7 +16,7 @@
 
 Selecting the cluster count $K^*$ automatically in $K$-Means / $K$-Means++ fails across standard methods when applied to modern **768D–4096D neural embeddings** (RAG chunk clustering, topic discovery, KV-cache quantization):
 1. **Geometric Indices (`Silhouette`, `Caliński–Harabasz`, `Davies–Bouldin`):** Cannot evaluate $K = 1$ (100% false-positive overfitting on single-topic corpora!), and **Caliński–Harabasz collapses flat onto $\hat{K} = 2$** on hierarchical high-dimensional embeddings.
-2. **Gap Statistic (`Tibshirani et al., 2001`):** Draws uniform reference points over a $d$-dimensional bounding box—catastrophically mismatching curved unit-sphere embeddings (`MAE = 5.13` on 1024D `BGE-Large`) while running **$5\times\text{–}7\times$ slower**.
+2. **Gap Statistic (`Tibshirani et al., 2001`):** Draws uniform reference points over a $d$-dimensional bounding box—catastrophically mismatching curved unit-sphere embeddings (`MAE = 5.13` on 1024D `BGE-Large`) while running **$`5\times`$–$`7\times`$ slower**.
 3. **Ambient `X-Means` / BIC (`Pelleg & Moore, 2000`):** Suffers **two opposite high-dimensional failures**:
    * **Dilution Collapse ($\hat{K} \to 1$):** Isotropic background noise $\sigma_\perp^2 > 0$ caps ambient log-distortion gains at $N\Delta^2/\sigma_\perp^2$ while penalties grow as $\Theta(Kd\ln N)$.
    * **Collinearity Inflation ($\hat{K} \to K_{\max}$):** Smooth low-intrinsic-rank manifolds ($\nu \ll d$) inflate ambient log-likelihoods by factor $d / \nu \gg 1$ (up to $32\times$ on 1024D embeddings!).
@@ -30,7 +30,7 @@ Selecting the cluster count $K^*$ automatically in $K$-Means / $K$-Means++ fails
 1. **Theorem 1 — Exact Marginal `LogSumExp` Mixture Likelihood (Curing Voronoi Overfitting):**  
    Proves that hard Voronoi partitioning reduces $\mathrm{WCSS}$ on a unimodal Gaussian $\mathcal{N}(\mathbf{0}, \sigma^2\mathbf{I}_m)$ by $1 - \frac{2}{\pi m}$, causing naive $\mathrm{WCSS}$-BIC to diverge at $-\frac{2}{\pi}N$ ($100\%$ overfitting). Evaluating exact marginal mixture likelihood eliminates Voronoi truncation bias while preserving sensitivity to softly touching clusters.
 2. **Theorem 2 & Pillar 1 — Gavish–Donoho Marchenko–Pastur Bulk Denoising:**  
-   Strips isotropic random-matrix noise singular values below the optimal Marchenko–Pastur threshold $\tau_{\mathrm{GD}} = \omega(\beta)s_{\mathrm{med}}$, preventing high-$d$ dilution collapse above $d_{\mathrm{crit}} = \frac{N\Delta^2}{(K^*-1)\sigma_\perp^2\ln N}$.
+   Strips isotropic random-matrix noise singular values below the optimal Marchenko–Pastur threshold $\tau_{\mathrm{GD}} = \omega(\beta)s_{\mathrm{med}}$, preventing high-$`d`$ dilution collapse above $d_{\mathrm{crit}} = \frac{N\Delta^2}{(K^*-1)\sigma_\perp^2\ln N}$.
 3. **Theorem 3 & Pillar 2 — Satterthwaite–Welch Quadratic-Form Degrees of Freedom:**  
    Matches squared Euclidean distances on anisotropic manifolds to their exact $\chi_\nu^2$ moment law via $\nu = \frac{(\operatorname{Tr}\hat{\boldsymbol{\Sigma}})^2}{\operatorname{Tr}(\hat{\boldsymbol{\Sigma}}^2)} \ll d$, eliminating $d/\nu$ collinearity inflation while guaranteeing **exact scale, translation, and orthogonal rotation invariance**.
 
@@ -42,7 +42,7 @@ Selecting the cluster count $K^*$ automatically in $K$-Means / $K$-Means++ fails
 
 ![Real Transformer Embeddings on NVIDIA GB10](figures/fig3_transformer_embeddings_gb10.png)
 
-| Method | `BGE-Base-768D` MAE $\downarrow$ | `768D` Within-$\pm 1$ Acc $\uparrow$ | `768D` NMI $\uparrow$ | `BGE-Large-1024D` MAE $\downarrow$ | `1024D` Within-$\pm 1$ Acc $\uparrow$ | `1024D` NMI $\uparrow$ |
+| Method | `BGE-Base-768D` MAE $\downarrow$ | `768D` Within-±1 Acc $\uparrow$ | `768D` NMI $\uparrow$ | `BGE-Large-1024D` MAE $\downarrow$ | `1024D` Within-±1 Acc $\uparrow$ | `1024D` NMI $\uparrow$ |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
 | **`SID-KMeans` (Ours, $\lambda$-free)** | **0.20** | **100.0%** | **0.745** | **0.23** | **100.0%** | **0.759** |
 | Ambient `X-Means` (Pelleg & Moore) | 0.70 | 93.3% | 0.707 | 0.53 | 96.7% | 0.721 |
