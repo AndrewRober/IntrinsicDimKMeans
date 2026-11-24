@@ -1,19 +1,14 @@
 cff-version: 1.2.0
-message: "If you use SID-KMeans, the mathematical proofs, or benchmark suite, please cite it as below."
-authors:
-  - family-names: "Rober"
-    given-names: "Andrew"
+message: "If you use this software or research paper, please cite it as below."
+type: software
 title: "Overcoming High-Dimensional Collapse and Voronoi Overfitting in K-Means: Spectral Intrinsic-Dimension Minimum Description Length (SID-KMeans)"
-version: 1.0.0
-date-released: 2026-11-19
-url: "https://github.com/AndrewRober/IntrinsicDimKMeans"
+authors:
+  - family-names: "Samy"
+    given-names: "Andrew Rober Fouad"
+    email: "andrew.rober@bytesglue.com"
+    affiliation: "BytesGlue"
 repository-code: "https://github.com/AndrewRober/IntrinsicDimKMeans"
+url: "https://andrewrober.github.io/papers/sid-kmeans/"
 license: MIT
-keywords:
-  - k-means clustering
-  - model selection
-  - intrinsic dimension
-  - random matrix theory
-  - minimum description length
-  - transformer embeddings
-  - bayesian information criterion
+version: "1.0.0"
+date-released: "2026-11-19"
